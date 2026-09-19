@@ -1,0 +1,174 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum OrderStatus {
+  NEW
+  PAID
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String?
+  phone        String?
+  role         Role      @default(CUSTOMER)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  orders       Order[]
+  reviews      Review[]
+}
+
+model Category {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  nameUa        String
+  namePl        String
+  descriptionUa String?
+  descriptionPl String?
+  image         String?
+  sortOrder     Int           @default(0)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  subCategories SubCategory[]
+  products      Product[]
+}
+
+model SubCategory {
+  id         String    @id @default(cuid())
+  slug       String    @unique
+  nameUa     String
+  namePl     String
+  categoryId String
+  sortOrder  Int       @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  products   Product[]
+}
+
+model Product {
+  id            String           @id @default(cuid())
+  sku           String           @unique
+  slug          String           @unique
+  titleUa       String
+  titlePl       String
+  descriptionUa String           @db.Text
+  descriptionPl String           @db.Text
+  usageUa       String?          @db.Text
+  usagePl       String?          @db.Text
+  ingredients   String?          @db.Text
+  images        String[]
+  isHit         Boolean          @default(false)
+  isNew         Boolean          @default(false)
+  isSeason      Boolean          @default(false)
+  isActive      Boolean          @default(true)
+  categoryId    String
+  subCategoryId String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  category      Category         @relation(fields: [categoryId], references: [id])
+  subCategory   SubCategory?     @relation(fields: [subCategoryId], references: [id])
+  variants      ProductVariant[]
+  reviews       Review[]
+  orderItems    OrderItem[]
+}
+
+model ProductVariant {
+  id         String      @id @default(cuid())
+  productId  String
+  nameUa     String      // "15 мл", "30 мл", "#04 Рожевий кварц"
+  namePl     String      // "15 ml", "30 ml", "#04 Różowy kwarc"
+  sku        String      @unique
+  price      Decimal     @db.Decimal(10, 2)
+  oldPrice   Decimal?    @db.Decimal(10, 2)
+  stock      Int         @default(0)
+  colorCode  String?     // напр. "#F5D7DB" для швидкого прев'ю
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  productId  String
+  userId     String?
+  authorName String
+  rating     Int      @default(5)
+  comment    String   @db.Text
+  isApproved Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique
+  userId          String?
+  status          OrderStatus @default(NEW)
+  customerName    String
+  customerPhone   String
+  customerEmail   String
+  deliveryMethod  String      // "nova_poshta", "inpost", "courier"
+  deliveryAddress String
+  paymentMethod   String      // "card_online", "invoice", "cod"
+  totalAmount     Decimal     @db.Decimal(10, 2)
+  notes           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  user            User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id          String          @id @default(cuid())
+  orderId     String
+  productId   String
+  variantId   String?
+  title       String
+  variantName String?
+  price       Decimal         @db.Decimal(10, 2)
+  quantity    Int             @default(1)
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product         @relation(fields: [productId], references: [id])
+  variant     ProductVariant? @relation(fields: [variantId], references: [id])
+}
+
+model Banner {
+  id        String   @id @default(cuid())
+  titleUa   String
+  titlePl   String
+  subUa     String?
+  subPl     String?
+  buttonUa  String?
+  buttonPl  String?
+  link      String
+  imageUrl  String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model SiteSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String   @db.Text
+  description String?
+  updatedAt   DateTime @updatedAt
+}

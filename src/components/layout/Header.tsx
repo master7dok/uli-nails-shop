@@ -1,25 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   ShoppingBag,
   Heart,
   User,
-  Phone,
-  Clock,
+  Search,
   ChevronDown,
-  Menu,
   X,
-  Sparkles,
+  Phone,
   Send,
   MessageCircle,
+  Sparkles,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import VoiceSearchBar from "@/components/catalog/VoiceSearchBar";
+import UliNailLogo from "@/components/layout/UliNailLogo";
 import { initialCategories } from "@/lib/initialData";
 
 export default function Header() {
@@ -29,331 +29,326 @@ export default function Header() {
   const pathname = usePathname();
 
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const langRef = useRef<HTMLDivElement>(null);
+  const catalogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (langRef.current && !langRef.current.contains(event.target as Node)) {
+        setIsLangDropdownOpen(false);
+      }
+      if (catalogRef.current && !catalogRef.current.contains(event.target as Node)) {
+        setIsCatalogOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#FAF8F5]/95 backdrop-blur-md border-b border-[#EAE1D7] transition-all duration-300">
-      {/* 1. TOP BAR: Delicately warm ivory/champagne luxury nude */}
-      <div className="bg-gradient-to-r from-[#F5EFEB] via-[#FAF8F5] to-[#F5EFEB] text-charcoal/80 text-xs py-2 px-4 sm:px-8 border-b border-[#EAE1D7]">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-gold-dark" />
-              <span className="font-medium text-charcoal/90">{dict.topBar.schedule}</span>
-            </div>
-            <div className="hidden md:flex items-center gap-1.5">
-              <Phone className="w-3.5 h-3.5 text-gold-dark" />
-              <a
-                href={`tel:${dict.topBar.phone.replace(/[^0-9+]/g, "")}`}
-                className="font-medium text-charcoal hover:text-gold-dark transition-colors"
-              >
-                {dict.topBar.phone}
-              </a>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <span className="hidden lg:inline-flex items-center gap-1.5 text-gold-dark font-semibold text-[11px] bg-white/80 px-3 py-0.5 rounded-full border border-gold/30 shadow-xs">
-              ✨ {dict.topBar.consultation}
-            </span>
-            <div className="flex items-center gap-3">
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-charcoal/70 hover:text-gold-dark transition-colors"
-                title="Instagram"
-              >
-                <span className="sr-only">Instagram</span>
-                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-              </a>
-              <a
-                href="https://t.me"
-                target="_blank"
-                rel="noreferrer"
-                className="text-charcoal/70 hover:text-gold-dark transition-colors"
-                title="Telegram"
-              >
-                <Send className="w-3.5 h-3.5" />
-              </a>
-              <a
-                href="https://viber.click"
-                target="_blank"
-                rel="noreferrer"
-                className="text-charcoal/70 hover:text-gold-dark transition-colors"
-                title="Viber"
-              >
-                <MessageCircle className="w-3.5 h-3.5" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. MAIN BAR */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4">
-        <div className="flex items-center justify-between gap-4 md:gap-8">
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 text-charcoal hover:text-gold-dark"
-          >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-
-          {/* Logo */}
-          <Link href={`/${locale}`} className="flex flex-col group">
-            <span className="font-serif text-2xl md:text-3xl font-semibold tracking-wider text-charcoal group-hover:text-gold-dark transition-colors">
-              Uli<span className="text-gold font-serif italic">Nail</span>
-            </span>
-            <span className="text-[9px] uppercase tracking-[0.25em] text-nude-500 font-sans -mt-1 font-medium">
-              Luxury Beauty
-            </span>
-          </Link>
-
-          {/* Smart Voice Search Bar */}
-          <div className="hidden md:flex flex-1 max-w-xl mx-4">
-            <VoiceSearchBar />
-          </div>
-
-          {/* Action Icons */}
-          <div className="flex items-center gap-2 sm:gap-4">
-            {/* Language Switcher */}
-            <div className="flex items-center bg-[#F5EFEB] rounded-full p-1 border border-[#EAE1D7]">
+    <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-pink-100/70 shadow-xs transition-all duration-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
+          
+          {/* LEFT SECTION: Catalog pill button + Social icons */}
+          <div className="flex items-center gap-3 sm:gap-5" ref={catalogRef}>
+            {/* Pink Catalog Pill Button */}
+            <div className="relative">
               <button
-                onClick={() => setLocale("ua")}
-                className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
-                  locale === "ua"
-                    ? "bg-gradient-to-r from-gold to-gold-dark text-white shadow-xs"
-                    : "text-nude-600 hover:text-charcoal"
-                }`}
+                onClick={() => setIsCatalogOpen(!isCatalogOpen)}
+                className="flex items-center gap-2 bg-brand-pink hover:bg-brand-pink-hover text-white text-xs sm:text-sm font-bold uppercase tracking-wider px-4 sm:px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 active:scale-95"
               >
-                UA
-              </button>
-              <button
-                onClick={() => setLocale("pl")}
-                className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
-                  locale === "pl"
-                    ? "bg-gradient-to-r from-gold to-gold-dark text-white shadow-xs"
-                    : "text-nude-600 hover:text-charcoal"
-                }`}
-              >
-                PL
-              </button>
-            </div>
-
-            {/* Account */}
-            <Link
-              href={`/${locale}/account`}
-              className="p-2.5 rounded-full text-charcoal hover:text-gold-dark hover:bg-nude-100 transition-all"
-              title={dict.header.account}
-            >
-              <User className="w-5 h-5" />
-            </Link>
-
-            {/* Wishlist */}
-            <Link
-              href={`/${locale}/account?tab=wishlist`}
-              className="p-2.5 rounded-full text-charcoal hover:text-gold-dark hover:bg-nude-100 transition-all relative"
-              title={dict.header.wishlist}
-            >
-              <Heart className="w-5 h-5" />
-              {totalWishlist > 0 && (
-                <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-gold-dark text-white text-[10px] flex items-center justify-center font-bold">
-                  {totalWishlist}
-                </span>
-              )}
-            </Link>
-
-            {/* Cart Button with Luxury Gold Gradient */}
-            <button
-              onClick={openCart}
-              className="flex items-center gap-2 py-2 px-3.5 sm:px-4 rounded-full bg-gradient-to-r from-gold to-gold-dark hover:from-gold-dark hover:to-[#96774E] text-white transition-all duration-300 shadow-luxury hover:shadow-gold-glow relative"
-            >
-              <ShoppingBag className="w-4 h-4 text-white" />
-              <span className="hidden sm:inline text-xs font-semibold tracking-wide">
-                {dict.header.cart}
-              </span>
-              <span className="w-5 h-5 rounded-full bg-white text-nude-900 text-xs font-extrabold flex items-center justify-center shadow-xs">
-                {totalItems}
-              </span>
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Search */}
-        <div className="mt-3 md:hidden">
-          <VoiceSearchBar />
-        </div>
-      </div>
-
-      {/* 3. NAVIGATION MENU (Dropdown Tree & Mega Menu) */}
-      <nav className="hidden lg:block border-t border-[#EAE1D7] bg-white/60">
-        <div className="max-w-7xl mx-auto px-8 flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            {/* Mega Menu Catalog Dropdown */}
-            <div
-              className="relative py-3"
-              onMouseEnter={() => setIsCatalogOpen(true)}
-              onMouseLeave={() => setIsCatalogOpen(false)}
-            >
-              <Link
-                href={`/${locale}/catalog`}
-                className="flex items-center gap-2 text-sm font-semibold text-charcoal hover:text-gold-dark transition-colors py-1"
-              >
-                <Sparkles className="w-4 h-4 text-gold-dark" />
-                <span>{dict.nav.catalog}</span>
+                <span>{dict.header.catalogBtn || "КАТАЛОГ ПРОДУКЦІЇ"}</span>
                 <ChevronDown
                   className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                    isCatalogOpen ? "rotate-180 text-gold-dark" : ""
+                    isCatalogOpen ? "rotate-180" : ""
                   }`}
                 />
-              </Link>
+              </button>
 
               {/* Mega Dropdown Panel */}
               {isCatalogOpen && (
-                <div className="absolute top-full left-0 w-[840px] bg-[#FAF8F5]/98 backdrop-blur-xl border border-[#EAE1D7] rounded-3xl shadow-luxury-lg p-6 grid grid-cols-3 gap-6 animate-fade-in z-50">
+                <div className="absolute top-full left-0 mt-3 w-[320px] sm:w-[650px] lg:w-[780px] bg-white/98 backdrop-blur-xl border border-pink-100 rounded-3xl shadow-2xl p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in z-50">
                   {initialCategories.map((cat) => (
                     <div key={cat.id} className="space-y-2">
                       <Link
                         href={`/${locale}/catalog?category=${cat.slug}`}
                         onClick={() => setIsCatalogOpen(false)}
-                        className="font-serif text-base font-semibold text-charcoal hover:text-gold-dark block transition-colors border-b border-[#EAE1D7] pb-1"
+                        className="font-bold text-sm text-slate-800 hover:text-brand-pink block transition-colors border-b border-pink-100 pb-1 flex items-center gap-1.5"
                       >
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-pink"></span>
                         {locale === "pl" ? cat.namePl : cat.nameUa}
                       </Link>
-                      <ul className="space-y-1.5 pl-1">
+                      <ul className="space-y-1.5 pl-2">
                         {cat.subCategories.map((sub) => (
                           <li key={sub.id}>
                             <Link
                               href={`/${locale}/catalog?category=${cat.slug}&subCategory=${sub.slug}`}
                               onClick={() => setIsCatalogOpen(false)}
-                              className="text-xs text-nude-600 hover:text-gold-dark transition-colors block"
+                              className="text-xs text-slate-500 hover:text-brand-pink transition-colors block py-0.5"
                             >
-                              • {locale === "pl" ? sub.namePl : sub.nameUa}
+                              — {locale === "pl" ? sub.namePl : sub.nameUa}
                             </Link>
                           </li>
                         ))}
                       </ul>
                     </div>
                   ))}
+                  <div className="sm:col-span-2 lg:col-span-3 pt-2 border-t border-pink-50 flex justify-end">
+                    <Link
+                      href={`/${locale}/catalog`}
+                      onClick={() => setIsCatalogOpen(false)}
+                      className="text-xs font-semibold text-brand-pink hover:underline flex items-center gap-1"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      {dict.header.allCategories} &rarr;
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* Static Nav Links */}
-            <Link
-              href={`/${locale}/catalog?hit=true`}
-              className="text-sm font-medium text-charcoal hover:text-gold-dark transition-colors py-3"
-            >
-              {dict.nav.bestsellers}
-            </Link>
-            <Link
-              href={`/${locale}/cooperation`}
-              className="text-sm font-medium text-charcoal hover:text-gold-dark transition-colors py-3"
-            >
-              {dict.nav.cooperation}
-            </Link>
-            <Link
-              href={`/${locale}/blog`}
-              className="text-sm font-medium text-charcoal hover:text-gold-dark transition-colors py-3"
-            >
-              {dict.nav.blog}
-            </Link>
-            <Link
-              href={`/${locale}/delivery`}
-              className="text-sm font-medium text-charcoal hover:text-gold-dark transition-colors py-3"
-            >
-              {dict.nav.delivery}
-            </Link>
-            <Link
-              href={`/${locale}/about`}
-              className="text-sm font-medium text-charcoal hover:text-gold-dark transition-colors py-3"
-            >
-              {dict.nav.about}
-            </Link>
-            <Link
-              href={`/${locale}/contacts`}
-              className="text-sm font-medium text-charcoal hover:text-gold-dark transition-colors py-3"
-            >
-              {dict.nav.contacts}
+            {/* Social Icons matching Screenshot 1 */}
+            <div className="hidden md:flex items-center gap-2.5 text-slate-700">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noreferrer"
+                className="p-1.5 rounded-full hover:text-brand-pink hover:bg-pink-50 transition-colors"
+                title="Instagram"
+              >
+                <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+              <a
+                href="https://wa.me"
+                target="_blank"
+                rel="noreferrer"
+                className="p-1.5 rounded-full hover:text-brand-pink hover:bg-pink-50 transition-colors"
+                title="WhatsApp / Viber"
+              >
+                <MessageCircle className="w-4 h-4" />
+              </a>
+              <a
+                href="https://t.me"
+                target="_blank"
+                rel="noreferrer"
+                className="p-1.5 rounded-full hover:text-brand-pink hover:bg-pink-50 transition-colors"
+                title="Telegram"
+              >
+                <Send className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+
+          {/* CENTER SECTION: Brand Logo */}
+          <div className="flex items-center justify-center">
+            <Link href={`/${locale}`} className="cursor-pointer">
+              <UliNailLogo size="md" />
             </Link>
           </div>
 
-          <div className="text-xs text-gold-dark font-medium tracking-wider uppercase">
-            Formula 9-Free • Professional Quality
+          {/* RIGHT SECTION: Language, Profile, Search, Wishlist, Round Cart, Menu */}
+          <div className="flex items-center gap-1.5 sm:gap-3 text-slate-700">
+            
+            {/* Language Dropdown Selector (RU in screenshot, UA / PL in our app) */}
+            <div className="relative" ref={langRef}>
+              <button
+                onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
+                className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider py-1.5 px-2.5 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <span>{locale.toUpperCase()}</span>
+                <ChevronDown className="w-3 h-3" />
+              </button>
+              {isLangDropdownOpen && (
+                <div className="absolute right-0 top-full mt-1 bg-white border border-slate-100 rounded-xl shadow-lg py-1 w-24 z-50">
+                  <button
+                    onClick={() => {
+                      setLocale("ua");
+                      setIsLangDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-1.5 text-xs font-semibold hover:bg-pink-50 hover:text-brand-pink transition-colors flex items-center justify-between ${
+                      locale === "ua" ? "text-brand-pink font-bold" : "text-slate-700"
+                    }`}
+                  >
+                    <span>UA</span>
+                    <span className="text-[10px] text-slate-400">Укр</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLocale("pl");
+                      setIsLangDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-1.5 text-xs font-semibold hover:bg-pink-50 hover:text-brand-pink transition-colors flex items-center justify-between ${
+                      locale === "pl" ? "text-brand-pink font-bold" : "text-slate-700"
+                    }`}
+                  >
+                    <span>PL</span>
+                    <span className="text-[10px] text-slate-400">Pol</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Profile */}
+            <Link
+              href={`/${locale}/account`}
+              className="p-2 rounded-full hover:text-brand-pink hover:bg-pink-50 transition-colors"
+              title={dict.header.account}
+            >
+              <User className="w-5 h-5 stroke-[1.8]" />
+            </Link>
+
+            {/* Search Trigger */}
+            <button
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className="p-2 rounded-full hover:text-brand-pink hover:bg-pink-50 transition-colors"
+              title="Пошук"
+            >
+              <Search className="w-5 h-5 stroke-[1.8]" />
+            </button>
+
+            {/* Wishlist */}
+            <Link
+              href={`/${locale}/account?tab=wishlist`}
+              className="p-2 rounded-full hover:text-brand-pink hover:bg-pink-50 transition-colors relative"
+              title={dict.header.wishlist}
+            >
+              <Heart className="w-5 h-5 stroke-[1.8]" />
+              {totalWishlist > 0 && (
+                <span className="absolute 1 top-1 right-1 w-4 h-4 rounded-full bg-brand-pink text-white text-[10px] flex items-center justify-center font-bold">
+                  {totalWishlist}
+                </span>
+              )}
+            </Link>
+
+            {/* Round Pink Cart Button matching Screenshot 1 */}
+            <button
+              onClick={openCart}
+              aria-label={dict.header.cart}
+              className="relative w-10 h-10 rounded-full bg-brand-pink hover:bg-brand-pink-hover text-white shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-200 active:scale-95 group"
+            >
+              <ShoppingBag className="w-4 h-4 stroke-[2.2] transition-transform group-hover:scale-110" />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-white text-brand-pink text-[11px] font-extrabold border-2 border-brand-pink flex items-center justify-center shadow-xs">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+
+            {/* MENU ≡ toggle button */}
+            <button
+              onClick={() => setIsDrawerOpen(true)}
+              className="flex flex-col items-center justify-center pl-1 sm:pl-2 text-slate-800 hover:text-brand-pink transition-colors group"
+              title={dict.header.menu || "МЕНЮ"}
+            >
+              <span className="text-[10px] font-extrabold tracking-widest uppercase mb-0.5">
+                {dict.header.menu || "МЕНЮ"}
+              </span>
+              <div className="flex flex-col gap-1 w-5">
+                <span className="h-[2px] w-full bg-slate-800 group-hover:bg-brand-pink rounded-full transition-colors"></span>
+                <span className="h-[2px] w-full bg-slate-800 group-hover:bg-brand-pink rounded-full transition-colors"></span>
+              </div>
+            </button>
           </div>
         </div>
-      </nav>
 
-      {/* Mobile Drawer Navigation */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden border-t border-[#EAE1D7] bg-[#FAF8F5] p-6 space-y-4 shadow-lg">
-          <Link
-            href={`/${locale}/catalog`}
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block text-base font-semibold text-charcoal"
-          >
-            {dict.nav.catalog}
-          </Link>
-          <div className="pl-4 space-y-2 border-l border-nude-200">
-            {initialCategories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={`/${locale}/catalog?category=${cat.slug}`}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-sm text-nude-700 hover:text-gold-dark"
-              >
-                {locale === "pl" ? cat.namePl : cat.nameUa}
-              </Link>
-            ))}
+        {/* Expandable Voice Search Bar if search icon is toggled or on mobile */}
+        {isSearchOpen && (
+          <div className="mt-3 pt-3 border-t border-pink-100 animate-fade-in">
+            <VoiceSearchBar />
           </div>
+        )}
+      </div>
 
-          <div className="pt-4 border-t border-nude-200 space-y-3">
-            <Link
-              href={`/${locale}/catalog?hit=true`}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block text-sm font-medium text-charcoal hover:text-gold-dark"
-            >
-              {dict.nav.bestsellers}
-            </Link>
-            <Link
-              href={`/${locale}/cooperation`}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block text-sm font-medium text-charcoal hover:text-gold-dark"
-            >
-              {dict.nav.cooperation}
-            </Link>
-            <Link
-              href={`/${locale}/blog`}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block text-sm font-medium text-charcoal hover:text-gold-dark"
-            >
-              {dict.nav.blog}
-            </Link>
-            <Link
-              href={`/${locale}/delivery`}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block text-sm font-medium text-charcoal hover:text-gold-dark"
-            >
-              {dict.nav.delivery}
-            </Link>
-            <Link
-              href={`/${locale}/about`}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block text-sm font-medium text-charcoal hover:text-gold-dark"
-            >
-              {dict.nav.about}
-            </Link>
-            <Link
-              href={`/${locale}/contacts`}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block text-sm font-medium text-charcoal hover:text-gold-dark"
-            >
-              {dict.nav.contacts}
-            </Link>
+      {/* Slide-out Drawer Menu */}
+      {isDrawerOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-sm bg-white h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between border-b border-pink-100 pb-4">
+                <UliNailLogo size="sm" />
+                <button
+                  onClick={() => setIsDrawerOpen(false)}
+                  className="p-2 rounded-full hover:bg-slate-100 text-slate-700"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                <Link
+                  href={`/${locale}/catalog`}
+                  onClick={() => setIsDrawerOpen(false)}
+                  className="block text-base font-bold text-slate-800 hover:text-brand-pink py-1.5"
+                >
+                  {dict.nav.catalog}
+                </Link>
+                <Link
+                  href={`/${locale}/catalog?hit=true`}
+                  onClick={() => setIsDrawerOpen(false)}
+                  className="block text-base font-bold text-slate-800 hover:text-brand-pink py-1.5"
+                >
+                  {dict.nav.bestsellers}
+                </Link>
+                <Link
+                  href={`/${locale}/about`}
+                  onClick={() => setIsDrawerOpen(false)}
+                  className="block text-base font-bold text-slate-800 hover:text-brand-pink py-1.5"
+                >
+                  {dict.nav.about}
+                </Link>
+                <Link
+                  href={`/${locale}/delivery`}
+                  onClick={() => setIsDrawerOpen(false)}
+                  className="block text-base font-bold text-slate-800 hover:text-brand-pink py-1.5"
+                >
+                  {dict.nav.delivery}
+                </Link>
+                <Link
+                  href={`/${locale}/blog`}
+                  onClick={() => setIsDrawerOpen(false)}
+                  className="block text-base font-bold text-slate-800 hover:text-brand-pink py-1.5"
+                >
+                  {dict.nav.blog}
+                </Link>
+                <Link
+                  href={`/${locale}/contacts`}
+                  onClick={() => setIsDrawerOpen(false)}
+                  className="block text-base font-bold text-slate-800 hover:text-brand-pink py-1.5"
+                >
+                  {dict.nav.contacts}
+                </Link>
+              </div>
+            </div>
+
+            <div className="border-t border-pink-100 pt-6 space-y-4">
+              <div className="flex items-center gap-3">
+                <Phone className="w-4 h-4 text-brand-pink" />
+                <a
+                  href="tel:0956575327"
+                  className="font-bold text-sm text-slate-800 hover:text-brand-pink"
+                >
+                  095 657 53 27
+                </a>
+              </div>
+              <div className="flex items-center gap-4 text-slate-600">
+                <a href="https://instagram.com" target="_blank" rel="noreferrer" className="hover:text-brand-pink">
+                  Instagram
+                </a>
+                <span>•</span>
+                <a href="https://t.me" target="_blank" rel="noreferrer" className="hover:text-brand-pink">
+                  Telegram
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       )}

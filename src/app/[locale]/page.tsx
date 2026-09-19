@@ -2,6 +2,7 @@ import React from "react";
 import HeroSlider from "@/components/home/HeroSlider";
 import CategoryGrid from "@/components/home/CategoryGrid";
 import ProductCarousel from "@/components/home/ProductCarousel";
+import ProductShowcase from "@/components/home/ProductShowcase";
 import MasterGuideBlock from "@/components/home/MasterGuideBlock";
 import InstagramFeed from "@/components/home/InstagramFeed";
 import { store } from "@/lib/store";
@@ -32,24 +33,27 @@ export default async function HomePage({
       {/* 2. Category Grid */}
       <CategoryGrid categories={categories} />
 
-      {/* 3. Bestsellers Carousel */}
+      {/* 3. Bestsellers Carousel ("Хіти матеріалів для манікюру") */}
       <ProductCarousel
-        title={dict.home.bestsellersTitle}
-        subtitle={dict.home.bestsellersSubtitle}
+        highlightTitle={dict.home.bestsellersHighlight || "Хіти матеріалів"}
+        title={dict.home.bestsellersSubtitlePart || "для манікюру"}
         products={bestsellers.length > 0 ? bestsellers : allProducts.slice(0, 4)}
       />
 
-      {/* 4. Fresh Arrivals Carousel */}
+      {/* 4. Promo Showcase (Screenshot 4: Top Crystal 13ml) */}
+      <ProductShowcase />
+
+      {/* 5. Fresh Arrivals Carousel */}
       <ProductCarousel
-        title={dict.home.newTitle}
-        subtitle={dict.home.newSubtitle}
+        highlightTitle={locale === "pl" ? "Nowości" : "Свіжі новинки"}
+        title={locale === "pl" ? "dla stylistek" : "для майстрів"}
         products={newArrivals.length > 0 ? newArrivals : allProducts.slice(2, 6)}
       />
 
-      {/* 5. Master Guide & Materials Block */}
+      {/* 6. Master Guide & Materials Block */}
       <MasterGuideBlock />
 
-      {/* 6. Instagram Feed */}
+      {/* 7. Instagram Feed */}
       <InstagramFeed />
     </div>
   );

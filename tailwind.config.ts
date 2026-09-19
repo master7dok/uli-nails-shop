@@ -36,6 +36,16 @@ const config: Config = {
           soft: "#333333",
           muted: "#666666",
         },
+        brand: {
+          pink: "#FF5E8E",
+          "pink-hover": "#E64979",
+          "pink-light": "#FFF1F5",
+          cyan: "#00B4D8",
+          "cyan-light": "#E0F2FE",
+          navy: "#1E293B",
+          "navy-hover": "#0F172A",
+          purple: "#A855F7",
+        },
       },
       fontFamily: {
         serif: ["var(--font-cormorant)", "Cormorant Garamond", "Playfair Display", "serif"],

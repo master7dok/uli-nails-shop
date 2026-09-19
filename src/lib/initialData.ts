@@ -95,6 +95,54 @@ export const initialCategories: Category[] = [
 
 export const initialProducts: Product[] = [
   {
+    id: "prod-lamp-01",
+    sku: "ULI-LMP-01",
+    slug: "portable-uv-led-manicure-lamp",
+    titleUa: "Портативний UV/LED ліхтарик для манікюру з підставкою",
+    titlePl: "Przenośna latarka UV/LED do manicure ze stojakiem",
+    descriptionUa: "Компактний портативний UV/LED ліхтарик на магнітній підставці. Ідеально підходить для швидкої фіксації верхніх форм, гелевих тіпсів та складних дизайнів. Потужний акумулятор та ергономічний корпус.",
+    descriptionPl: "Kompaktowa przenośna latarka UV/LED na podstawce. Idealna do szybkiego utwardzania form górnych, tipsów żelowych i zdobień.",
+    usageUa: "Використовуйте для проміжної фіксації матеріалу 15-30 секунд.",
+    usagePl: "Używaj do punktowego utwardzania materiału przez 15-30 sekund.",
+    ingredients: "Medical grade aluminum, Rose gold hardware, UV/LED diodes 365+405nm.",
+    images: ["/images/prod_lamp.jpg"],
+    isHit: true,
+    isNew: true,
+    isActive: true,
+    categoryId: "cat-tools",
+    subCategoryId: "sub-cutters",
+    variants: [
+      { id: "v-lamp-1", productId: "prod-lamp-01", nameUa: "Ліхтарик + підставка", namePl: "Latarka + stojak", sku: "ULI-LMP-01-SET", price: 1200, oldPrice: 1350, stock: 20 },
+    ],
+    reviews: [
+      { id: "r-lamp-1", productId: "prod-lamp-01", authorName: "Тетяна", rating: 5, comment: "Неймовірно зручний для нарощування на гелеві тіпси! Заряд тримає дуже довго.", isApproved: true, createdAt: "2025-01-12" }
+    ],
+  },
+  {
+    id: "prod-cream-01",
+    sku: "ULI-CRM-AP",
+    slug: "nourishing-cream-one-more-aperol",
+    titleUa: "Крем живильний та зволожувальний «One More Aperol» 30ml",
+    titlePl: "Krem odżywczy i nawilżający «One More Aperol» 30ml",
+    descriptionUa: "Живильний крем для рук з ароматом цитрусового аперолю, олією ши та пантенолом. Миттєво вбирається, не залишаючи липкості, робить шкіру рук оксамитовою.",
+    descriptionPl: "Odżywczy krem do rąk o zapachu cytrusowego aperolu, z masłem shea i pantenolem.",
+    usageUa: "Наносьте масажними рухами на чисту шкіру рук у міру необхідності.",
+    usagePl: "Wmasuj w czyste dłonie w razie potrzeby.",
+    ingredients: "Aqua, Butyrospermum Parkii Butter, Panthenol, Fragrance, Tocopherol Acetate.",
+    images: ["/images/prod_cream.jpg"],
+    isHit: true,
+    isSeason: true,
+    isActive: true,
+    categoryId: "cat-care",
+    subCategoryId: "sub-creams",
+    variants: [
+      { id: "v-cream-1", productId: "prod-cream-01", nameUa: "30 мл", namePl: "30 ml", sku: "ULI-CRM-AP-30", price: 120, oldPrice: null, stock: 50 },
+    ],
+    reviews: [
+      { id: "r-cream-1", productId: "prod-cream-01", authorName: "Ірина", rating: 5, comment: "Запах просто божественний! Клієнтки після манікюру питають, де купити такий крем.", isApproved: true, createdAt: "2025-01-15" }
+    ],
+  },
+  {
     id: "prod-1",
     sku: "ULI-CB-01",
     slug: "cover-base-royal-nude",

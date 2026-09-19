@@ -3,92 +3,93 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { Category } from "@/types";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface CategoryGridProps {
-  categories: Category[];
+  categories?: Category[];
 }
 
-export default function CategoryGrid({ categories }: CategoryGridProps) {
+export default function CategoryGrid({ categories = [] }: CategoryGridProps) {
   const { locale, dict } = useLanguage();
 
-  return (
-    <section className="py-12">
-      <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
-        <div>
-          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-charcoal tracking-wide">
-            {dict.home.categoriesTitle}
-          </h2>
-          <p className="text-xs sm:text-sm text-nude-500 mt-1 max-w-xl">
-            {dict.home.categoriesSubtitle}
-          </p>
-        </div>
-        <Link
-          href={`/${locale}/catalog`}
-          className="text-xs font-semibold text-gold-dark hover:text-charcoal uppercase tracking-wider flex items-center gap-1 transition-colors"
-        >
-          <span>{dict.header.allCategories}</span>
-          <ArrowUpRight className="w-4 h-4" />
-        </Link>
-      </div>
+  // Featured 4 primary categories matching Screenshot 2
+  const featuredCards = [
+    {
+      id: "bases",
+      slug: "bases",
+      nameUa: "Бази",
+      namePl: "Bazy",
+      countUa: "63 товари",
+      countPl: "63 produkty",
+      image: "/images/cat_bases.jpg",
+    },
+    {
+      id: "liquid-gels",
+      slug: "builder-gels",
+      nameUa: "Рідкі гелі (LIGHT)",
+      namePl: "Żele płynne (LIGHT)",
+      countUa: "66 товарів",
+      countPl: "66 produktów",
+      image: "/images/cat_liquid_gel.jpg",
+    },
+    {
+      id: "builder-gels",
+      slug: "builder-gels",
+      nameUa: "Гелі для нарощування",
+      namePl: "Żele do przedłużania",
+      countUa: "86 товарів",
+      countPl: "86 produktów",
+      image: "/images/cat_builder_gel.jpg",
+    },
+    {
+      id: "tops",
+      slug: "tops",
+      nameUa: "Топи",
+      namePl: "Topy",
+      countUa: "54 товари",
+      countPl: "54 produkty",
+      image: "/images/cat_tops.jpg",
+    },
+  ];
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {categories.map((category) => {
-          const name = locale === "pl" ? category.namePl : category.nameUa;
-          const countText =
-            locale === "pl"
-              ? `${category.productCount || 12} produktów`
-              : `${category.productCount || 12} товарів`;
+  return (
+    <section className="py-8">
+      {/* 4 Cards Grid exactly matching Screenshot 2 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {featuredCards.map((card) => {
+          const title = locale === "pl" ? card.namePl : card.nameUa;
+          const count = locale === "pl" ? card.countPl : card.countUa;
 
           return (
             <Link
-              key={category.id}
-              href={`/${locale}/catalog?category=${category.slug}`}
-              className="group relative h-80 rounded-3xl overflow-hidden shadow-luxury border border-nude-200/70 hover:border-gold/50 transition-all duration-500 block"
+              key={card.id}
+              href={`/${locale}/catalog?category=${card.slug}`}
+              className="group flex flex-col focus:outline-none"
             >
-              {/* Image */}
-              <Image
-                src={category.image || "https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=800"}
-                alt={name}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-108"
-              />
+              {/* Image Container with 3D product render on podium */}
+              <div className="relative aspect-[4/5] w-full rounded-3xl md:rounded-[2rem] overflow-hidden bg-slate-100 shadow-md group-hover:shadow-xl transition-all duration-300 border border-pink-100/60">
+                <Image
+                  src={card.image}
+                  alt={title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
 
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/40 to-transparent transition-opacity group-hover:opacity-90" />
-
-              {/* Counter Badge */}
-              <div className="absolute top-4 right-4 z-10">
-                <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white text-[11px] font-semibold tracking-wider">
-                  {countText}
+              {/* Pink Pill Badge Counter */}
+              <div className="mt-3.5 mb-1">
+                <span className="inline-block px-3 py-1 rounded-full bg-brand-pink text-white text-[11px] font-bold tracking-wider shadow-xs">
+                  {count}
                 </span>
               </div>
 
-              {/* Text info */}
-              <div className="absolute bottom-0 inset-x-0 p-6 z-10 text-white flex items-end justify-between">
-                <div>
-                  <h3 className="font-serif text-2xl font-semibold mb-1 group-hover:text-gold-light transition-colors">
-                    {name}
-                  </h3>
-                  <div className="flex flex-wrap gap-2 text-[11px] text-nude-300">
-                    {category.subCategories.slice(0, 2).map((sub) => (
-                      <span key={sub.id} className="bg-black/30 px-2 py-0.5 rounded-md">
-                        {locale === "pl" ? sub.namePl : sub.nameUa}
-                      </span>
-                    ))}
-                    {category.subCategories.length > 2 && (
-                      <span className="text-gold-light">+{category.subCategories.length - 2}</span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white group-hover:bg-gold group-hover:text-nude-900 transition-all duration-300 transform group-hover:rotate-45">
-                  <ArrowUpRight className="w-5 h-5" />
-                </div>
-              </div>
+              {/* Bold Category Title */}
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900 group-hover:text-brand-pink transition-colors tracking-tight leading-snug">
+                {title}
+              </h3>
             </Link>
           );
         })}

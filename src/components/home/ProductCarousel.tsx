@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 import { Product } from "@/types";
 import ProductCard from "@/components/catalog/ProductCard";
 import { useLanguage } from "@/context/LanguageContext";
@@ -125,6 +127,35 @@ export default function ProductCarousel({
             <ProductCard product={product} />
           </div>
         ))}
+
+        {/* End Card: Всі товари → matching Screenshot 4 */}
+        <div className="w-[240px] sm:w-[260px] flex-shrink-0 snap-start">
+          <Link
+            href={`/${locale}/catalog`}
+            className="group relative h-full min-h-[380px] rounded-3xl overflow-hidden bg-gradient-to-b from-[#FF5E8E] via-[#E11D48] to-[#9F1239] p-6 text-white flex flex-col justify-end shadow-md hover:shadow-xl transition-all duration-300 block"
+          >
+            <div className="absolute inset-0 opacity-25 group-hover:opacity-35 transition-opacity pointer-events-none">
+              <Image
+                src="/images/cat_tops.jpg"
+                alt="Каталог"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="relative z-10 space-y-3">
+              <span className="text-[11px] uppercase tracking-widest font-extrabold text-pink-200 block">
+                ULINAIL COLLECTION
+              </span>
+              <h3 className="text-2xl font-black text-white group-hover:text-pink-100 transition-colors leading-tight">
+                {locale === "pl" ? "Wszystkie produkty" : "Всі товари"}
+              </h3>
+              <div className="w-full flex items-center gap-2 pt-2 border-t border-white/30">
+                <span className="h-[2px] flex-1 bg-white/70 group-hover:bg-white transition-colors"></span>
+                <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-1.5 transition-transform" />
+              </div>
+            </div>
+          </Link>
+        </div>
       </div>
     </section>
   );

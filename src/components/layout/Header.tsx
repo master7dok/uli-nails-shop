@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   ShoppingBag,
@@ -14,6 +15,7 @@ import {
   Send,
   MessageCircle,
   Sparkles,
+  ArrowRight,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useCart } from "@/context/CartContext";
@@ -31,10 +33,11 @@ export default function Header() {
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const langRef = useRef<HTMLDivElement>(null);
   const catalogRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -44,10 +47,49 @@ export default function Header() {
       if (catalogRef.current && !catalogRef.current.contains(event.target as Node)) {
         setIsCatalogOpen(false);
       }
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        !(event.target as HTMLElement).closest(".menu-trigger-btn")
+      ) {
+        setIsMenuOpen(false);
+      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Close menu on route change
+  useEffect(() => {
+    setIsMenuOpen(false);
+    setIsCatalogOpen(false);
+    setIsSearchOpen(false);
+  }, [pathname]);
+
+  const catalogLinks = [
+    { nameUa: "БАЗИ", namePl: "BAZY", href: `/${locale}/catalog?category=bases` },
+    { nameUa: "РІДКІ ГЕЛІ (LIGHT)", namePl: "ŻELE PŁYNNE (LIGHT)", href: `/${locale}/catalog?category=builder-gels` },
+    { nameUa: "ГЕЛІ ДЛЯ НАРОЩУВАННЯ", namePl: "ŻELE BUDUJĄCE", href: `/${locale}/catalog?category=builder-gels` },
+    { nameUa: "ТОПИ", namePl: "TOPY", href: `/${locale}/catalog?category=tops` },
+    { nameUa: "БЛИСКІТКИ", namePl: "BROKATY", href: `/${locale}/catalog?category=gel-polish` },
+    { nameUa: "ІНСТРУМЕНТИ", namePl: "NARZĘDZIA", href: `/${locale}/catalog?category=tools` },
+    { nameUa: "ДОПОМІЖНІ МАТЕРІАЛИ", namePl: "MATERIAŁY POMOCNICZE", href: `/${locale}/catalog` },
+    { nameUa: "ГЕЛЬ ЛАКИ", namePl: "LAKIERY HYBRYDOWE", href: `/${locale}/catalog?category=gel-polish` },
+    { nameUa: "МЕРЧ", namePl: "MERCH", href: `/${locale}/catalog` },
+    { nameUa: "ОДНОФАЗНІ ГЕЛЬ-ЛАКИ", namePl: "LAKIERY JEDNOFAZOWE", href: `/${locale}/catalog?category=gel-polish` },
+  ];
+
+  const brandLinks = [
+    { nameUa: "КАТАЛОГ", namePl: "KATALOG", href: `/${locale}/catalog` },
+    { nameUa: "СПІВПРАЦЯ", namePl: "WSPÓŁPRACA", href: `/${locale}/about` },
+    { nameUa: "БЛОГ", namePl: "BLOG", href: `/${locale}/blog` },
+    { nameUa: "ДОСТАВКА І ОПЛАТА", namePl: "DOSTAWA I PŁATNOŚĆ", href: `/${locale}/delivery` },
+    { nameUa: "ПРО НАС", namePl: "O NAS", href: `/${locale}/about` },
+    { nameUa: "ОБМІН ТА ПОВЕРНЕННЯ", namePl: "WYMIANA I ZWROTY", href: `/${locale}/delivery` },
+    { nameUa: "ДОГОВІР ОФЕРТИ", namePl: "REGULAMIN", href: `/${locale}/privacy` },
+    { nameUa: "КОНТАКТИ", namePl: "KONTAKT", href: `/${locale}/contacts` },
+    { nameUa: "ULINAIL SUPPORT CENTER", namePl: "ULINAIL SUPPORT CENTER", href: `/${locale}/contacts` },
+  ];
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-pink-100/70 shadow-xs transition-all duration-300">
@@ -70,7 +112,7 @@ export default function Header() {
                 />
               </button>
 
-              {/* Mega Dropdown Panel */}
+              {/* Mega Dropdown Panel from Left Button */}
               {isCatalogOpen && (
                 <div className="absolute top-full left-0 mt-3 w-[320px] sm:w-[650px] lg:w-[780px] bg-white/98 backdrop-blur-xl border border-pink-100 rounded-3xl shadow-2xl p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in z-50">
                   {initialCategories.map((cat) => (
@@ -158,7 +200,7 @@ export default function Header() {
           {/* RIGHT SECTION: Language, Profile, Search, Wishlist, Round Cart, Menu */}
           <div className="flex items-center gap-1.5 sm:gap-3 text-slate-700">
             
-            {/* Language Dropdown Selector (RU in screenshot, UA / PL in our app) */}
+            {/* Language Dropdown Selector */}
             <div className="relative" ref={langRef}>
               <button
                 onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
@@ -223,13 +265,13 @@ export default function Header() {
             >
               <Heart className="w-5 h-5 stroke-[1.8]" />
               {totalWishlist > 0 && (
-                <span className="absolute 1 top-1 right-1 w-4 h-4 rounded-full bg-brand-pink text-white text-[10px] flex items-center justify-center font-bold">
+                <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-brand-pink text-white text-[10px] flex items-center justify-center font-bold">
                   {totalWishlist}
                 </span>
               )}
             </Link>
 
-            {/* Round Pink Cart Button matching Screenshot 1 */}
+            {/* Round Pink Cart Button */}
             <button
               onClick={openCart}
               aria-label={dict.header.cart}
@@ -243,24 +285,30 @@ export default function Header() {
               )}
             </button>
 
-            {/* MENU ≡ toggle button */}
+            {/* MENU ≡ / ЗАКРИТИ ✕ Toggle Button matching Screenshot 1 */}
             <button
-              onClick={() => setIsDrawerOpen(true)}
-              className="flex flex-col items-center justify-center pl-1 sm:pl-2 text-slate-800 hover:text-brand-pink transition-colors group"
-              title={dict.header.menu || "МЕНЮ"}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="menu-trigger-btn flex flex-col items-center justify-center pl-1 sm:pl-2 text-slate-800 hover:text-brand-pink transition-colors group cursor-pointer"
+              title={isMenuOpen ? dict.header.closeMenu || "ЗАКРИТИ" : dict.header.menu || "МЕНЮ"}
             >
-              <span className="text-[10px] font-extrabold tracking-widest uppercase mb-0.5">
-                {dict.header.menu || "МЕНЮ"}
+              <span className="text-[10px] font-black tracking-widest uppercase mb-0.5">
+                {isMenuOpen ? dict.header.closeMenu || "ЗАКРИТИ" : dict.header.menu || "МЕНЮ"}
               </span>
-              <div className="flex flex-col gap-1 w-5">
-                <span className="h-[2px] w-full bg-slate-800 group-hover:bg-brand-pink rounded-full transition-colors"></span>
-                <span className="h-[2px] w-full bg-slate-800 group-hover:bg-brand-pink rounded-full transition-colors"></span>
+              <div className="flex flex-col gap-1 w-5 items-center">
+                {isMenuOpen ? (
+                  <span className="h-[2px] w-full bg-brand-pink rounded-full"></span>
+                ) : (
+                  <>
+                    <span className="h-[2px] w-full bg-slate-800 group-hover:bg-brand-pink rounded-full transition-colors"></span>
+                    <span className="h-[2px] w-full bg-slate-800 group-hover:bg-brand-pink rounded-full transition-colors"></span>
+                  </>
+                )}
               </div>
             </button>
           </div>
         </div>
 
-        {/* Expandable Voice Search Bar if search icon is toggled or on mobile */}
+        {/* Expandable Voice Search Bar */}
         {isSearchOpen && (
           <div className="mt-3 pt-3 border-t border-pink-100 animate-fade-in">
             <VoiceSearchBar />
@@ -268,86 +316,91 @@ export default function Header() {
         )}
       </div>
 
-      {/* Slide-out Drawer Menu */}
-      {isDrawerOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-sm bg-white h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto">
-            <div className="space-y-6">
-              <div className="flex items-center justify-between border-b border-pink-100 pb-4">
-                <UliNailLogo size="sm" />
-                <button
-                  onClick={() => setIsDrawerOpen(false)}
-                  className="p-2 rounded-full hover:bg-slate-100 text-slate-700"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+      {/* FULL LUXURY DROPDOWN MENU MODAL matching Screenshot 1 (media_1789834584820.png) */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 top-[65px] z-40 bg-black/40 backdrop-blur-xs animate-fade-in overflow-y-auto">
+          <div
+            ref={menuRef}
+            className="max-w-7xl mx-auto bg-white rounded-b-[2.5rem] md:rounded-[2.5rem] shadow-2xl border border-pink-100 p-6 sm:p-10 lg:p-12 mt-2 mx-4 animate-fade-in"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12">
+              
+              {/* COLUMN 1: Каталог */}
+              <div className="md:col-span-4 space-y-4">
+                <h3 className="text-2xl sm:text-3xl font-black text-brand-pink tracking-tight">
+                  {locale === "pl" ? "Katalog" : "Каталог"}
+                </h3>
+                <ul className="space-y-3">
+                  {catalogLinks.map((item, idx) => (
+                    <li key={idx}>
+                      <Link
+                        href={item.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="text-xs sm:text-sm font-bold tracking-wide text-slate-800 hover:text-brand-pink transition-colors flex items-center gap-2 group"
+                      >
+                        <span className="text-brand-pink font-extrabold group-hover:translate-x-1 transition-transform">
+                          —
+                        </span>
+                        <span>{locale === "pl" ? item.namePl : item.nameUa}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              <div className="space-y-3">
-                <Link
-                  href={`/${locale}/catalog`}
-                  onClick={() => setIsDrawerOpen(false)}
-                  className="block text-base font-bold text-slate-800 hover:text-brand-pink py-1.5"
-                >
-                  {dict.nav.catalog}
-                </Link>
+              {/* COLUMN 2: ULINAIL Links */}
+              <div className="md:col-span-4 space-y-4">
+                <h3 className="text-2xl sm:text-3xl font-black text-brand-pink tracking-tight">
+                  ULINAIL
+                </h3>
+                <ul className="space-y-3">
+                  {brandLinks.map((item, idx) => (
+                    <li key={idx}>
+                      <Link
+                        href={item.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="text-xs sm:text-sm font-bold tracking-wide text-slate-800 hover:text-brand-pink transition-colors flex items-center gap-2 group"
+                      >
+                        <span className="text-brand-pink font-extrabold group-hover:translate-x-1 transition-transform">
+                          —
+                        </span>
+                        <span>{locale === "pl" ? item.namePl : item.nameUa}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* COLUMN 3: Featured Visual Card (Наші Хіти →) matching Screenshot 1 */}
+              <div className="md:col-span-4">
                 <Link
                   href={`/${locale}/catalog?hit=true`}
-                  onClick={() => setIsDrawerOpen(false)}
-                  className="block text-base font-bold text-slate-800 hover:text-brand-pink py-1.5"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="group relative block w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-xl border border-pink-100 focus:outline-none"
                 >
-                  {dict.nav.bestsellers}
-                </Link>
-                <Link
-                  href={`/${locale}/about`}
-                  onClick={() => setIsDrawerOpen(false)}
-                  className="block text-base font-bold text-slate-800 hover:text-brand-pink py-1.5"
-                >
-                  {dict.nav.about}
-                </Link>
-                <Link
-                  href={`/${locale}/delivery`}
-                  onClick={() => setIsDrawerOpen(false)}
-                  className="block text-base font-bold text-slate-800 hover:text-brand-pink py-1.5"
-                >
-                  {dict.nav.delivery}
-                </Link>
-                <Link
-                  href={`/${locale}/blog`}
-                  onClick={() => setIsDrawerOpen(false)}
-                  className="block text-base font-bold text-slate-800 hover:text-brand-pink py-1.5"
-                >
-                  {dict.nav.blog}
-                </Link>
-                <Link
-                  href={`/${locale}/contacts`}
-                  onClick={() => setIsDrawerOpen(false)}
-                  className="block text-base font-bold text-slate-800 hover:text-brand-pink py-1.5"
-                >
-                  {dict.nav.contacts}
-                </Link>
-              </div>
-            </div>
+                  <Image
+                    src="/images/cat_liquid_gel.jpg"
+                    alt="Наші Хіти ULINAIL"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 380px"
+                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                  />
+                  {/* Fluid Gradient vignette */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-[#0F172A]/30 to-transparent" />
 
-            <div className="border-t border-pink-100 pt-6 space-y-4">
-              <div className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-brand-pink" />
-                <a
-                  href="tel:0956575327"
-                  className="font-bold text-sm text-slate-800 hover:text-brand-pink"
-                >
-                  095 657 53 27
-                </a>
+                  {/* Bottom Text Label matching Screenshot 1: Наші Хіти ➔ */}
+                  <div className="absolute bottom-6 inset-x-6 z-10 text-white flex flex-col items-start">
+                    <span className="text-2xl sm:text-3xl font-black tracking-tight text-white group-hover:text-[#FFAEC3] transition-colors">
+                      {locale === "pl" ? "Nasze Hity" : "Наші Хіти"}
+                    </span>
+                    <div className="mt-2 w-full flex items-center gap-3">
+                      <span className="h-[2px] flex-1 bg-white/70 group-hover:bg-brand-pink transition-colors"></span>
+                      <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </Link>
               </div>
-              <div className="flex items-center gap-4 text-slate-600">
-                <a href="https://instagram.com" target="_blank" rel="noreferrer" className="hover:text-brand-pink">
-                  Instagram
-                </a>
-                <span>•</span>
-                <a href="https://t.me" target="_blank" rel="noreferrer" className="hover:text-brand-pink">
-                  Telegram
-                </a>
-              </div>
+
             </div>
           </div>
         </div>

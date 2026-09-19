@@ -94,6 +94,28 @@ export default function CategoryGrid({ categories = [] }: CategoryGridProps) {
           );
         })}
       </div>
+
+      {/* Secondary Categories Quick Pills matching Screenshots */}
+      <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 pt-6 mt-4">
+        {[
+          { id: "glitter", slug: "gel-polish", nameUa: "Блискітки", namePl: "Brokaty", count: "24" },
+          { id: "tools", slug: "tools", nameUa: "Інструменти", namePl: "Narzędzia", count: "35" },
+          { id: "aux", slug: "care", nameUa: "Допоміжні матеріали", namePl: "Materiały pomocnicze", count: "50" },
+          { id: "polish", slug: "gel-polish", nameUa: "Гель лаки", namePl: "Lakiery hybrydowe", count: "206" },
+          { id: "onestep", slug: "gel-polish", nameUa: "Однофазні гель-лаки", namePl: "Lakiery 1-fazowe", count: "19" },
+        ].map((sec) => (
+          <Link
+            key={sec.id}
+            href={`/${locale}/catalog?category=${sec.slug}`}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 hover:bg-brand-pink hover:text-white text-slate-700 text-xs font-bold border border-pink-100 shadow-2xs transition-all duration-200 group"
+          >
+            <span>{locale === "pl" ? sec.namePl : sec.nameUa}</span>
+            <span className="px-2 py-0.5 rounded-full bg-pink-50 group-hover:bg-white/20 text-brand-pink group-hover:text-white text-[10px] font-extrabold transition-colors">
+              {sec.count}
+            </span>
+          </Link>
+        ))}
+      </div>
     </section>
   );
 }

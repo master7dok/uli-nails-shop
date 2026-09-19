@@ -33,6 +33,8 @@ export const dictionaries = {
       allCategories: "Всі категорії",
       catalogBtn: "КАТАЛОГ ПРОДУКЦІЇ",
       menu: "МЕНЮ",
+      closeMenu: "ЗАКРИТИ",
+      ourHits: "Наші Хіти",
     },
     hero: {
       badge: "Преміум якість для майстрів",
@@ -208,6 +210,8 @@ export const dictionaries = {
       allCategories: "Wszystkie kategorie",
       catalogBtn: "KATALOG PRODUKTÓW",
       menu: "MENU",
+      closeMenu: "ZAMKNIJ",
+      ourHits: "Nasze Hity",
     },
     hero: {
       badge: "Jakość premium dla stylistek",

@@ -154,9 +154,8 @@ export const initialProducts: Product[] = [
     usagePl: "1. Odtłuść płytkę paznokcia i nałóż dehydrator bezkwasowy.\n2. Zaaplikuj cienką warstwę wcierki z bazy przezroczystej i utwardź w lampie 60 s.\n3. Nałóż kroplę Cover Base i wypoziomuj.\n4. Utwardzaj w lampie UV/LED 48W przez 60-90 sekund.",
     ingredients: "Di-HEMA Trimethylhexyl Dicarbamate, HEMA, Isobornyl Methacrylate, Cellulose Acetate Butyrate, Hydroxycyclohexyl Phenyl Ketone, CI 77891, CI 77491.",
     images: [
-      "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=800&auto=format&fit=crop",
+      "/images/cat_bases.jpg",
+      "/images/cat_bases2.jpg",
     ],
     isHit: true,
     isNew: true,
@@ -185,8 +184,8 @@ export const initialProducts: Product[] = [
     usagePl: "Nałóż równomierną warstwę na utwardzony kolor. Utwardzaj w lampie LED przez 60 sekund. Pozostaw na 30 sekund do ostygnięcia po wyjęciu z lampy.",
     ingredients: "Polyurethane Acrylate Oligomer, Hydroxyethyl Methacrylate, Trimethylbenzoyl Diphenylphosphine Oxide.",
     images: [
-      "https://images.unsplash.com/photo-1599305090598-fe179d501227?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=800&auto=format&fit=crop",
+      "/images/cat_tops.jpg",
+      "/images/cat_tops2.jpg",
     ],
     isHit: true,
     isNew: false,
@@ -213,8 +212,8 @@ export const initialProducts: Product[] = [
     usagePl: "Nałóż na bazę elastyczną, przytrzymaj magnes 3-5 mm od płytki przez 5-10 sekund i utwardź w lampie przez 60 sekund.",
     ingredients: "Acrylates Copolymer, Magnetic Pearl Powder, Mica, Silica Dimethyl Silylate, CI 77489.",
     images: [
-      "https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1599305090598-fe179d501227?q=80&w=800&auto=format&fit=crop",
+      "/images/cat_liquid_gel.jpg",
+      "/images/cat_liquid_gel2.jpg",
     ],
     isHit: true,
     isNew: true,
